@@ -1,37 +1,30 @@
 #include "philo.h"
 
-long long get_time()
-{
-	struct timeval time;
-
-	gettimeofday(&time, NULL);
-	return((time.tv_sec * 1000) + (time.tv_usec / 1000));
-}
-
-void print_message(long long time, int id, char *str, t_philosopher *philosopher)
+void	print_message(long long time, int id, char *str,
+					  t_philosopher *philosopher)
 {
 	pthread_mutex_lock(philosopher->print);
 	printf("%llu philo %d %s\n", time, id, str);
 	pthread_mutex_unlock(philosopher->print);
 }
 
-int     all_digits(char *str)
+int	all_digits(char *str)
 {
-	int fl;
-	int i;
+	int	fl;
+	int	i;
 
 	fl = 0;
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if (str[i] < 48 && str[i] > 57)
+		if (str[i] < 48 || str[i] > 57)
 			fl = 1;
 		i++;
 	}
 	return (fl);
 }
 
-int		ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
 	long long int	a;
 	int				i;
@@ -59,12 +52,12 @@ int		ft_atoi(const char *str)
 	return (a);
 }
 
-void free_forks(pthread_mutex_t **forks, int i)
+void	free_forks(pthread_mutex_t **forks, int i)
 {
-	int k;
+	int	k;
 
 	k = 0;
-	while(k<i)
+	while (k < i)
 	{
 		free(forks[k]);
 		k++;
@@ -72,9 +65,9 @@ void free_forks(pthread_mutex_t **forks, int i)
 	free(forks);
 }
 
-void free_table(t_table *table)
+void	free_table(t_table *table)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	free(table->philo);
