@@ -77,7 +77,7 @@ void free_table(t_table *table)
 	int i;
 
 	i = 0;
-	free(table->philosophers);
+	free(table->philo);
 	free_forks(table->forks, table->ph_threads);
 	free(table);
 }

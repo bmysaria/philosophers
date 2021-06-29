@@ -8,6 +8,12 @@
 # include <unistd.h>
 # include <sys/time.h>
 
+# define FORK "has taken a fork"
+# define EAT "is eating"
+# define SLEEP "is sleeping"
+# define THINK "is thinking"
+
+
 # define INVALID_ARGS -1
 # define MALLOC -2
 # define MUTEX_INIT -3
@@ -41,7 +47,7 @@ typedef struct s_table
     long long       to_sleep;
     int             meals;
     pthread_mutex_t **forks;
-    t_philosopher   *philosophers;
+    t_philosopher   *philo;
     long long       start;
     pthread_mutex_t *print;
     pthread_mutex_t *check_meal;
