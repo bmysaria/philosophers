@@ -10,6 +10,9 @@ long long get_time()
 
 void print_message(long long time, int id, char *str, t_philosopher *philosopher)
 {
+//    (void)(id);
+//    (void)(str);
+//    (void)(time);
     pthread_mutex_lock(philosopher->print);
     printf("%llu philo %d %s\n", time, id, str);
     pthread_mutex_unlock(philosopher->print);

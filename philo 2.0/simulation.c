@@ -12,8 +12,9 @@ int check_death(t_philosopher *philosopher)
         return (1);
     }
     pthread_mutex_unlock(philosopher->check_meal);
-    if (philosopher->table->meals !=0 && philosopher->table->are_full == philosopher->table->meals)
+    if (philosopher->table->meals !=0 && philosopher->table->are_full == philosopher->table->ph_threads)
     {
+        pthread_mutex_lock(philosopher->print);
         printf("Ate %d times\n", philosopher->table->meals);
         return (2);
     }
@@ -39,7 +40,9 @@ void eat(t_philosopher *philosopher)
     {
         if (philosopher->haseaten < philosopher->meals)
             philosopher->haseaten++;
-        if (philosopher->haseaten == philosopher->meals && philosopher->isfull == 0) {
+        if (philosopher->haseaten == philosopher->meals && philosopher->isfull == 0)
+        {
+           // printf("tut\n");
             philosopher->isfull = 1;
             philosopher->table->are_full++;
         }
@@ -100,8 +103,9 @@ int simulation(t_table *table, pthread_t *ph_t)
         i = -1;
         while(++i < table->ph_threads)
         {
+            //printf("%d %d\n", table->philosophers[i].haseaten, table->are_full);
             res = check_death(&table->philosophers[i]);
-            if (res == 1)
+            if (res == 1 || res == 2)
                 return 1;
         }
     }
