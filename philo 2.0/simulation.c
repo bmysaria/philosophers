@@ -8,7 +8,6 @@ int	check_death(t_philosopher *philo)
 		pthread_mutex_lock(philo->print);
 		printf("%llu philo %d has died\n", get_time() - philo->start,
 			   philo->id);
-		printf("%llu\n", get_time() - philo->deadline);
 		philo->table->firstdeath = 1;
 		return (1);
 	}
@@ -82,21 +81,27 @@ void	*lifetime(void *args)
 int	simulation(t_table *table, pthread_t *ph_t)
 {
 	int	i;
-	int	res;
 
 	i = -1;
 	while (++i < table->ph_threads)
 	{
 		pthread_create(&ph_t[i], NULL, &lifetime, &table->philo[i]);
+		pthread_detach(ph_t[i]);
 	}
 	while (1)
 	{
 		i = -1;
 		while (++i < table->ph_threads)
 		{
-			res = check_death(&table->philo[i]);
-			if (res == 1 || res == 2)
+			if (check_death(&table->philo[i]))
+			{
+				i = -1;
+				while (++i < table->ph_threads + 2)
+				{
+					pthread_mutex_destroy(table->forks[i]);
+				}
 				return (1);
+			}
 		}
 	}
 }
@@ -125,5 +130,7 @@ int	threads(t_table *table)
 		table->philo[i].to_sleep = table->to_sleep;
 		i++;
 	}
-	return (simulation(table, ph_t));
+	simulation(table, ph_t);
+	free(ph_t);
+	return (0);
 }

@@ -71,6 +71,6 @@ void	free_table(t_table *table)
 
 	i = 0;
 	free(table->philo);
-	free_forks(table->forks, table->ph_threads);
+	free_forks(table->forks, table->ph_threads + 2);
 	free(table);
 }

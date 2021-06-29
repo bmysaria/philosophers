@@ -72,12 +72,6 @@ int	serve_the_table(t_table *table)
 		free(table);
 		return (error(MALLOC));
 	}
-	forks = create_forks(table);
-	if (!forks)
-	{
-		free(table);
-		return (error(MALLOC));
-	}
 	philo = malloc(sizeof(t_philosopher) * table->ph_threads);
 	if (!philo)
 	{

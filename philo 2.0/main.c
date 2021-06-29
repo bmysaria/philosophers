@@ -72,5 +72,7 @@ int	main(int argc, char **argv)
 		return (-1);
 	if (serve_the_table(table))
 		return (-1);
-	return (threads(table));
+	threads(table);
+	free_table(table);
+	return (0);
 }
