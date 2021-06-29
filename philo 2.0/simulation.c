@@ -2,7 +2,7 @@
 
 int check_death(t_philosopher *philosopher)
 {
-    pthread_mutex_lock(philosopher->check_meal);
+   pthread_mutex_lock(philosopher->check_meal);
     if(get_time() > philosopher->deadline)
     {
         pthread_mutex_lock(philosopher->print);
@@ -11,7 +11,7 @@ int check_death(t_philosopher *philosopher)
         philosopher->table->firstdeath = 1;
         return (1);
     }
-    pthread_mutex_unlock(philosopher->check_meal);
+   pthread_mutex_unlock(philosopher->check_meal);
     if (philosopher->table->meals !=0 && philosopher->table->are_full == philosopher->table->ph_threads)
     {
         pthread_mutex_lock(philosopher->print);
@@ -23,12 +23,14 @@ int check_death(t_philosopher *philosopher)
 
 void eat(t_philosopher *philosopher)
 {
+    long long time;
+
     pthread_mutex_lock(philosopher->left);
     print_message(get_time() - philosopher->start, philosopher->id, "has taken a fork", philosopher);
     pthread_mutex_lock(philosopher->right);
     print_message(get_time() - philosopher->start, philosopher->id, "has taken a fork", philosopher);
     print_message(get_time() - philosopher->start, philosopher->id, "is eating", philosopher);
-    long long time = get_time();
+    time = get_time();
     while(get_time() < time + philosopher->to_eat)
         usleep(100);
     pthread_mutex_lock(philosopher->check_meal);
@@ -42,7 +44,6 @@ void eat(t_philosopher *philosopher)
             philosopher->haseaten++;
         if (philosopher->haseaten == philosopher->meals && philosopher->isfull == 0)
         {
-           // printf("tut\n");
             philosopher->isfull = 1;
             philosopher->table->are_full++;
         }
@@ -103,7 +104,6 @@ int simulation(t_table *table, pthread_t *ph_t)
         i = -1;
         while(++i < table->ph_threads)
         {
-            //printf("%d %d\n", table->philosophers[i].haseaten, table->are_full);
             res = check_death(&table->philosophers[i]);
             if (res == 1 || res == 2)
                 return 1;
