@@ -22,21 +22,21 @@ int	check_death(t_philosopher *philo)
 	return (0);
 }
 
-void	eat(t_philosopher *philo)
+void eat(t_philosopher *philo)
 {
-	long long	time;
+	long long time;
 
 	pthread_mutex_lock(philo->left);
 	print_message(get_time() - philo->start, philo->id, FORK, philo);
 	pthread_mutex_lock(philo->right);
+	time = get_time();
+	pthread_mutex_lock(philo->check_meal);
+	philo->deadline = time + philo->to_die;
+	pthread_mutex_unlock(philo->check_meal);
 	print_message(get_time() - philo->start, philo->id, FORK, philo);
 	print_message(get_time() - philo->start, philo->id, EAT, philo);
-	time = get_time();
 	while (get_time() < time + philo->to_eat)
 		usleep(100);
-	pthread_mutex_lock(philo->check_meal);
-	philo->deadline = get_time() + philo->to_die;
-	pthread_mutex_unlock(philo->check_meal);
 	pthread_mutex_unlock(philo->right);
 	pthread_mutex_unlock(philo->left);
 	if (philo->table->meals != 0)
