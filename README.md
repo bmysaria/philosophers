@@ -1,6 +1,6 @@
 # philosophers
 
-Dining philosophers problem solved in C. A 42 courses subject.
+Dining philosophers problem solved in C. A 42 courses project.
 
 Compiles with make, runs with arguments: 
 ./philo 
