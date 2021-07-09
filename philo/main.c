@@ -6,6 +6,12 @@ int	error(int num)
 		printf("Error: invalid number of arguments\n");
 	else if (num == MALLOC)
 		printf("Error: allocation failed\n");
+	else if (num == MUTEX_INIT)
+		printf("Error: mutex initialization failed");
+	else if (num == PTHREAD_C)
+		printf("Error: pthread creation failed");
+	else if (num == PTHREAD_D)
+		printf("Error: pthread detaching failed");
 	return (-1);
 }
 

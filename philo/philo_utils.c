@@ -67,9 +67,6 @@ void	free_forks(pthread_mutex_t **forks, int i)
 
 void	free_table(t_table *table)
 {
-	int	i;
-
-	i = 0;
 	free(table->philo);
 	free_forks(table->forks, table->ph_threads + 2);
 	free(table);

@@ -1,5 +1,14 @@
 #include "philo.h"
 
+void my_usleep(long long time)
+{
+	long long now;
+
+	now = get_time();
+	while (get_time() < time + now)
+		usleep(100);
+}
+
 int	check_death(t_philosopher *philo)
 {
 	pthread_mutex_lock(philo->check_meal);
@@ -35,8 +44,7 @@ void eat(t_philosopher *philo)
 	pthread_mutex_unlock(philo->check_meal);
 	print_message(get_time() - philo->start, philo->id, FORK, philo);
 	print_message(get_time() - philo->start, philo->id, EAT, philo);
-	while (get_time() < time + philo->to_eat)
-		usleep(100);
+	my_usleep(philo->to_eat);
 	pthread_mutex_unlock(philo->right);
 	pthread_mutex_unlock(philo->left);
 	if (philo->table->meals != 0)
@@ -54,25 +62,18 @@ void eat(t_philosopher *philo)
 void	*lifetime(void *args)
 {
 	t_philosopher	*philo;
-	long long		time;
 
 	philo = (t_philosopher *)args;
 	pthread_mutex_lock(philo->check_meal);
 	philo->deadline = get_time() + philo->to_die;
 	pthread_mutex_unlock(philo->check_meal);
 	if (philo->id % 2 != 0)
-	{
-		time = get_time();
-		while (get_time() < time + philo->to_eat)
-			usleep(100);
-	}
+		my_usleep(philo->to_eat);
 	while (philo->table->firstdeath == 0)
 	{
 		eat(philo);
 		print_message(get_time() - philo->start, philo->id, SLEEP, philo);
-		time = get_time();
-		while (get_time() <= time + philo->to_sleep)
-			usleep(100);
+		my_usleep(philo->to_sleep);
 		print_message(get_time() - philo->start, philo->id, THINK, philo);
 	}
 	return (NULL);
@@ -85,8 +86,10 @@ int	simulation(t_table *table, pthread_t *ph_t)
 	i = -1;
 	while (++i < table->ph_threads)
 	{
-		pthread_create(&ph_t[i], NULL, &lifetime, &table->philo[i]);
-		pthread_detach(ph_t[i]);
+		if (pthread_create(&ph_t[i], NULL, &lifetime, &table->philo[i]))
+			return (error(PTHREAD_C));
+		if (pthread_detach(ph_t[i]))
+			return (error(PTHREAD_D));
 	}
 	while (1)
 	{
@@ -106,31 +109,4 @@ int	simulation(t_table *table, pthread_t *ph_t)
 	}
 }
 
-int	threads(t_table *table)
-{
-	pthread_t	*ph_t;
-	int			i;
 
-	i = 0;
-	ph_t = malloc(sizeof (pthread_t) * (table->ph_threads));
-	if (!ph_t)
-	{
-		free_table(table);
-		return (error(MALLOC));
-	}
-	table->start = get_time();
-	while (i < table->ph_threads)
-	{
-		table->philo[i].last_meal = table->start;
-		table->philo[i].deadline = table->start + table->to_die;
-		table->philo[i].start = table->start;
-		table->philo[i].meals = table->meals;
-		table->philo[i].to_eat = table->to_eat;
-		table->philo[i].to_die = table->to_die;
-		table->philo[i].to_sleep = table->to_sleep;
-		i++;
-	}
-	simulation(table, ph_t);
-	free(ph_t);
-	return (0);
-}

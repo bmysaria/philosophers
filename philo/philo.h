@@ -15,6 +15,8 @@
 # define INVALID_ARGS -1
 # define MALLOC -2
 # define MUTEX_INIT -3
+# define PTHREAD_C -4
+# define PTHREAD_D -5
 
 typedef struct s_table	t_table;
 
@@ -66,5 +68,7 @@ int					threads(t_table *table);
 void				free_table(t_table *table);
 int					serve_the_table(t_table *table);
 int					all_digits(char *str);
+void				my_usleep(long long time);
+int	simulation(t_table *table, pthread_t *ph_t);
 
 #endif

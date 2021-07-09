@@ -8,6 +8,35 @@ long long	get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
+int	threads(t_table *table)
+{
+	pthread_t	*ph_t;
+	int			i;
+
+	i = 0;
+	ph_t = malloc(sizeof (pthread_t) * (table->ph_threads));
+	if (!ph_t)
+	{
+		free_table(table);
+		return (error(MALLOC));
+	}
+	table->start = get_time();
+	while (i < table->ph_threads)
+	{
+		table->philo[i].last_meal = table->start;
+		table->philo[i].deadline = table->start + table->to_die;
+		table->philo[i].start = table->start;
+		table->philo[i].meals = table->meals;
+		table->philo[i].to_eat = table->to_eat;
+		table->philo[i].to_die = table->to_die;
+		table->philo[i].to_sleep = table->to_sleep;
+		i++;
+	}
+	simulation(table, ph_t);
+	free(ph_t);
+	return (0);
+}
+
 void	hand_out_forks(t_table *table, t_philosopher *philo,
 					   pthread_mutex_t **forks)
 {
