@@ -7,11 +7,11 @@ int	error(int num)
 	else if (num == MALLOC)
 		printf("Error: allocation failed\n");
 	else if (num == MUTEX_INIT)
-		printf("Error: mutex initialization failed");
+		printf("Error: mutex initialization failed\n");
 	else if (num == PTHREAD_C)
-		printf("Error: pthread creation failed");
+		printf("Error: pthread creation failed\n");
 	else if (num == PTHREAD_D)
-		printf("Error: pthread detaching failed");
+		printf("Error: pthread detaching failed\n");
 	return (-1);
 }
 
